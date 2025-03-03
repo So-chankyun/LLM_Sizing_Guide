@@ -1,5 +1,7 @@
 import argparse
 from tabulate import tabulate
+import csv
+from datetime import datetime
 
 def main():
     parser = argparse.ArgumentParser(description='Your script description')
@@ -43,7 +45,8 @@ def main():
         {"name": "Mistral-7B-v0.3", "params_billion": 7, "d_model": 4096, "n_heads": 32, "n_layers": 32, "max_context_window": 32768, "d_head": 128},
         {"name": "Falcon-7B", "params_billion": 7, "d_model": 4544, "n_heads": 71, "n_layers": 32, "max_context_window": 2048, "d_head": 64},
         {"name": "Falcon-40B", "params_billion": 40, "d_model": 8192, "n_heads": 128, "n_layers": 60, "max_context_window": 2048, "d_head": 64},
-        {"name": "Falcon-180B", "params_billion": 180, "d_model": 14848, "n_heads": 232, "n_layers": 80, "max_context_window": 2048, "d_head": 64}
+        {"name": "Falcon-180B", "params_billion": 180, "d_model": 14848, "n_heads": 232, "n_layers": 80, "max_context_window": 2048, "d_head": 64},
+        {"name": "Qwen-14B", "params_billion": 14, "d_model": 5120, "n_heads": 40, "n_layers": 40, "max_context_window": 8192, "d_head": 128}
         # Add or comment out model specifications as needed
     ]
 
@@ -77,8 +80,24 @@ def main():
         kv_cache_size_per_token = calc_kv_cache_size_per_token(model_spec["n_layers"], model_spec["d_model"])
         context_window = prompt_size + response_size
         memory_footprint = calc_memory_footprint(model_spec, n_concurrent_request, context_window)
-        memory_footprint_table.append([model_spec['name'], f"{kv_cache_size_per_token:.6f} GiB/token", f"{memory_footprint:.2f} GB"])
-    print(tabulate(memory_footprint_table, headers=['Model', 'KV Cache Size per Token', 'Memory Footprint'], tablefmt='orgtbl'))
+        memory_footprint_table.append({
+            'Model': model_spec['name'],
+            'Input Size (tokens)': prompt_size,
+            'Output Size (tokens)': response_size,
+            'Concurrent Requests': n_concurrent_request,
+            'KV Cache Size per Token': f"{kv_cache_size_per_token:.6f} GiB/token",
+            'Memory Footprint': f"{memory_footprint:.2f} GB"
+        })
+    # Print and save memory footprint table
+    print(tabulate(memory_footprint_table, headers="keys", tablefmt='orgtbl'))
+    
+    # Save memory footprint results to CSV
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    memory_csv_filename = f'llm_memory_footprint_{timestamp}.csv'
+    with open(memory_csv_filename, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=memory_footprint_table[0].keys())
+        writer.writeheader()
+        writer.writerows(memory_footprint_table)
 
 
     for model in model_specs:
@@ -112,11 +131,30 @@ def main():
                 e2e_latency = calc_e2e_latency(prefill_time_per_token, tpot, prompt_size, response_size)
                 throughput = response_size / e2e_latency if e2e_latency > 0 else "OOM"
 
-            capacity_latency_table.append([
-                model['name'], gpu['name'], f"{int(kv_cache_tokens)}", f"{prefill_time_per_token:.3f} ms",
-                f"{tpot:.3f} ms", f"{ttft:.3f} s", f"{e2e_latency:.1f} s", f"{throughput:.2f} tokens/sec"
-            ])
-    print(tabulate(capacity_latency_table, headers=['Model', 'GPU', 'Max # KV Cache Tokens', 'Prefill Time', 'TPOT (ms)', 'TTFT', 'E2E Latency', 'Output Tokens Throughput'], tablefmt='orgtbl'))
+            capacity_latency_table.append({
+                'Model': model['name'],
+                'GPU': gpu['name'],
+                'Input Size (tokens)': prompt_size,
+                'Output Size (tokens)': response_size,
+                'Concurrent Requests': n_concurrent_request,
+                'Max # KV Cache Tokens': f"{int(kv_cache_tokens)}",
+                'Prefill Time': f"{prefill_time_per_token:.3f} ms",
+                'TPOT (ms)': f"{tpot:.3f} ms",
+                'TTFT': f"{ttft:.3f} s",
+                'E2E Latency': f"{e2e_latency:.1f} s",
+                'Output Tokens Throughput': f"{throughput:.2f} tokens/sec"
+            })
+    # Print and save capacity latency table
+    print(tabulate(capacity_latency_table, headers="keys", tablefmt='orgtbl'))
+    
+    # Save capacity and latency results to CSV
+    perf_csv_filename = f'llm_performance_{timestamp}.csv'
+    with open(perf_csv_filename, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=capacity_latency_table[0].keys())
+        writer.writeheader()
+        writer.writerows(capacity_latency_table)
+    
+    print(f"\nResults saved to CSV files:\n1. {memory_csv_filename}\n2. {perf_csv_filename}")
 
 if __name__ == '__main__':
     main()
