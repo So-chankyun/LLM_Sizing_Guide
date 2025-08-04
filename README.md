@@ -19,16 +19,21 @@ By modifying these variables, you can easily estimate the performance characteri
  n_concurrent_request = 10
 
 ******************** Estimate LLM Memory Footprint ********************
-| Model         | KV Cache Size per Token   | Memory Footprint   |
-|---------------+---------------------------+--------------------|
-| Llama-3.1-70B | 0.002441 GiB/token        | 246.25 GB          |
+| Model           |   Input Size (tokens) |   Output Size (tokens) |   Concurrent Requests | KV Cache Size per Token   | Memory Footprint   |
+|-----------------+-----------------------+------------------------+-----------------------+---------------------------+--------------------|
+| Llama-3-8B      |                  4096 |                    256 |                    10 | 0.000122 GiB/token        | 21.31 GB           |
+| Llama-3-70B     |                  4096 |                    256 |                    10 | 0.000305 GiB/token        | 153.28 GB          |
+| Llama-3.1-8B    |                  4096 |                    256 |                    10 | 0.000122 GiB/token        | 21.31 GB           |
+| Llama-3.1-70B   |                  4096 |                    256 |                    10 | 0.000305 GiB/token        | 153.28 GB          |
+| Mistral-7B-v0.3 |                  4096 |                    256 |                    10 | 0.000122 GiB/token        | 19.31 GB           |
+| Qwen2.5-14B     |                  4096 |                    256 |                    10 | 0.000183 GiB/token        | 37.37 GB           |
 
-******************** Estimate LLM Capacity and Latency ********************
-| Model         | GPU       |   Max # KV Cache Tokens | Prefill Time   | TPOT (ms)   | TTFT    | E2E Latency   | Output Tokens Throughput   |
-|---------------+-----------+-------------------------+----------------+-------------+---------+---------------+----------------------------|
-| Llama-3.1-70B | H100 PCIe |                   73728 | 0.046 ms       | 17.500 ms   | 0.064 s | 4.7 s         | 54.82 tokens/sec           |
-| Llama-3.1-70B | H100 SXM  |                   73728 | 0.035 ms       | 10.448 ms   | 0.046 s | 2.8 s         | 90.80 tokens/sec           |
-| Llama-3.1-70B | H100 NVL  |                   96665 | 0.042 ms       | 8.974 ms    | 0.051 s | 2.5 s         | 103.68 tokens/sec          |
-| Llama-3.1-70B | H200 SXM  |                  173670 | 0.035 ms       | 7.292 ms    | 0.043 s | 2.0 s         | 127.27 tokens/sec          |
-| Llama-3.1-70B | H200 NVL  |                  173670 | 0.042 ms       | 7.292 ms    | 0.049 s | 2.0 s         | 125.60 tokens/sec          |
-```
+******************** Estimate LLM Capacity and Latency ******************** 
+| Model           | GPU       |   Input Size (tokens) |   Output Size (tokens) |   Concurrent Requests |   Max # KV Cache Tokens | Prefill Time   | TPOT (ms)   | TTFT    | E2E Latency   | Output Tokens Throughput   |
+|-----------------+-----------+-----------------------+------------------------+-----------------------+-------------------------+----------------+-------------+---------+---------------+----------------------------|
+| Llama-3-8B      | H100 PCIe |                  4096 |                    256 |                    10 |                 1660245 | 0.005 ms       | 2.000 ms    | 0.007 s | 0.5 s         | 479.71 tokens/sec          |
+| Llama-3-70B     | H100 PCIe |                  4096 |                    256 |                    10 |                  983040 | 0.046 ms       | 17.500 ms   | 0.064 s | 4.7 s         | 54.82 tokens/sec           |
+| Llama-3.1-8B    | H100 PCIe |                  4096 |                    256 |                    10 |                 1660245 | 0.005 ms       | 2.000 ms    | 0.007 s | 0.5 s         | 479.71 tokens/sec          |
+| Llama-3.1-70B   | H100 PCIe |                  4096 |                    256 |                    10 |                  983040 | 0.046 ms       | 17.500 ms   | 0.064 s | 4.7 s         | 54.82 tokens/sec           |
+| Mistral-7B-v0.3 | H100 PCIe |                  4096 |                    256 |                    10 |                 1671168 | 0.005 ms       | 1.750 ms    | 0.006 s | 0.5 s         | 548.24 tokens/sec          |
+| Qwen2.5-14B     | H100 PCIe |                  4096 |                    256 |                    10 |                 1587063 | 0.010 ms       | 3.675 ms    | 0.013 s | 1.0 s         | 261.07 tokens/sec          |
