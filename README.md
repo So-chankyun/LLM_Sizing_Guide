@@ -1,5 +1,6 @@
 # LLM_Sizing_Guide
 A calculator to estimate the memory footprint, capacity, and latency based on your planned LLM application's requirements on different GPU architectures..
+Blog: https://blogs.vmware.com/cloud-foundation/2024/09/25/llm-inference-sizing-and-performance-guidance/
 
 # Usage
 Prerequisite: `pip install -r requirements.txt`
@@ -12,7 +13,7 @@ Here are the Flags and their abbreviations for the script.
 
 By modifying these variables, you can easily estimate the performance characteristics of your LLM deployment and make informed decisions about your infrastructure requirements.
 
-# Sample output
+# Example output
 ```bash
 ✗ python LLM_size_pef_calculator.py -g 4 -p 4096 -r 256 -c 10
  num_gpu = 4, prompt_size = 4096 tokens, response_size = 256 tokens
