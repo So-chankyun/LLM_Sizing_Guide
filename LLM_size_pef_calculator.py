@@ -117,10 +117,21 @@ def calculate_performance_metrics(
             metrics = calculator.calculate_metrics(
                 model, gpu, prompt_size, response_size
             )
+
+            # model size / gpu memory
+            context_window = prompt_size + response_size
+            memory_footprint = calculator.calc_memory_footprint(
+                                    model, n_concurrent_request, context_window
+                                )
+            available_memory = calculator.num_gpu * gpu.memory_gb
+
+            # 소숫점으로도 나올 수 있음
+            gpu_count = round(memory_footprint/available_memory, 2)
             
             row = PerformanceReporter.format_performance_row(
                 model.name,
                 gpu.name,
+                gpu_count,
                 prompt_size,
                 response_size,
                 n_concurrent_request,
@@ -180,9 +191,9 @@ def main() -> None:
         performance_table,
         "******************** Estimate LLM Capacity and Latency ********************"
     )
-    perf_csv_file = reporter.save_to_csv(performance_table, 'llm_performance')
+    # perf_csv_file = reporter.save_to_csv(performance_table, 'llm_performance')
 
-    print(f"\nResults saved to CSV files:\n1. {memory_csv_file}\n2. {perf_csv_file}")
+    # print(f"\nResults saved to CSV files:\n1. {memory_csv_file}\n2. {perf_csv_file}")
 
 if __name__ == '__main__':
     main()

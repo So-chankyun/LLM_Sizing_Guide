@@ -13,13 +13,14 @@ class GPUSpec:
 # Use your specific GPUs here
 GPU_SPECS: List[GPUSpec] = [
     # GPUSpec("L40", 181, 48, 864),
-    GPUSpec("L40s", 362, 48, 864),
+    # GPUSpec("L40s", 362, 48, 864),
     # GPUSpec("H100 PCIe", 756.5, 80, 2000),
     # GPUSpec("H100 SXM", 989.5, 80, 3350),
-    GPUSpec("H100 NVL", 835.5, 94, 3900),
-    # GPUSpec("H200 SXM", 989.5, 141, 4800),
+    # GPUSpec("H100 NVL", 835.5, 94, 3900),
+    GPUSpec("H200 SXM", 989.5, 141, 4800),
     GPUSpec("H200 NVL", 835.5, 141, 4800),
-    GPUSpec("MI300X", 1307, 192, 5300)
+    # GPUSpec("MI300X", 1307, 192, 5300),
+    GPUSpec("B300",2250,288,8000)
 ]
 
 # Commented out GPUs for reference

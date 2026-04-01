@@ -46,3 +46,26 @@ By modifying these variables, you can easily estimate the performance characteri
 | Qwen2.5-14B     | H100 NVL |                  4096 |                    256 |                    10 |                 1892898 | 0.009 ms       | 1.885 ms    | 0.011 s | 0.5 s         | 493.74 tokens/sec          |
 | Qwen2.5-14B     | H200 NVL |                  4096 |                    256 |                    10 |                 2919628 | 0.009 ms       | 1.531 ms    | 0.010 s | 0.4 s         | 598.08 tokens/sec          |
 | Qwen2.5-14B     | MI300X   |                  4096 |                    256 |                    10 |                 4033740 | 0.006 ms       | 1.387 ms    | 0.007 s | 0.4 s         | 677.15 tokens/sec          |
+```
+
+# REST API & Docker
+This project provides a FastAPI backend for sizing models.
+Make sure you have [uv](https://github.com/astral-sh/uv) installed, then run the tests/API.
+
+### Run tests:
+```bash
+uv run pytest -v tests/
+```
+
+### Run Server (Dev):
+```bash
+uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+You can access Swagger UI Docs at http://127.0.0.0:8000/docs.
+
+### Docker For Deployment (Kubernetes):
+You can build a Docker image and deploy to k8s:
+```bash
+docker build -t llm-sizing-guide .
+docker run -p 8000:8000 llm-sizing-guide
+```
