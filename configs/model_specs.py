@@ -14,17 +14,20 @@ class ModelSpec:
     max_context_window: int
 
 MODEL_SPECS: List[ModelSpec] = [
+    # ModelSpec(
+    #     "Llama-3.1-8B", 8, 4096, 32, 8, 32, 131072
+    # ),
+    # ModelSpec(
+    #     "Llama-3.1-70B", 70, 8192, 64, 8, 80, 131072
+    # ),
+    # ModelSpec(
+    #     "Mistral-7B-v0.3", 7, 4096, 32, 8, 32, 32768
+    # ),
+    # ModelSpec(
+    #     "Qwen2.5-14B", 14.7, 5120, 40, 8, 48, 131072
+    # )
     ModelSpec(
-        "Llama-3.1-8B", 8, 4096, 32, 8, 32, 131072
-    ),
-    ModelSpec(
-        "Llama-3.1-70B", 70, 8192, 64, 8, 80, 131072
-    ),
-    ModelSpec(
-        "Mistral-7B-v0.3", 7, 4096, 32, 8, 32, 32768
-    ),
-    ModelSpec(
-        "Qwen2.5-14B", 14.7, 5120, 40, 8, 48, 131072
+        "GPT-OSS-120B",117,2880,36,8,36,131072
     )
 ]
 
