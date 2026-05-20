@@ -17,7 +17,19 @@ class PerformanceMetrics:
     throughput: Union[float, str]
 
 class PerformanceCalculator:
-    """Calculator for LLM inference performance metrics."""
+    """
+    PerformanceCalculator 클래스를 초기화합니다.
+    
+    Args:
+        num_gpu: 사용할 GPU의 개수입니다.
+    Description:
+        - gpu 가 2개 이상일 경우 tensor parallelism 으로 모델을 분산하여 서빙하였다고 가정
+        - 분산된 모델을 통하여 요청을 처리한다고 가정
+        - 모델의 가중치 양자화는 고려되지 않음.(모든 파라미터를 fp16 으로 가정)
+        - gpu 종류에 따른 추론 가능 정밀도가 고려되지 않음
+        - batch size 고려되지 않음
+        - data parallel 고려되지 않음 
+    """
     
     def __init__(self, num_gpu: int):
         self.num_gpu = num_gpu
