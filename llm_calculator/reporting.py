@@ -51,6 +51,7 @@ class PerformanceReporter:
     def format_performance_row(
         model_name: str,
         gpu_name: str,
+        gpu_count: float,
         prompt_size: int,
         response_size: int,
         n_concurrent_request: int,
@@ -59,7 +60,8 @@ class PerformanceReporter:
         """Format a row for performance metrics report."""
         return {
             'Model': model_name,
-            'GPU': gpu_name,
+            'GPU Type': gpu_name,
+            'Mininum GPU Count':gpu_count,
             'Input Size (tokens)': prompt_size,
             'Output Size (tokens)': response_size,
             'Concurrent Requests': n_concurrent_request,
